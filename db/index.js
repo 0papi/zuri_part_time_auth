@@ -1,9 +1,14 @@
-// connect db here
+// import packages
+const mongoose = require("mongoose");
 
-const connectDB = () => {
+// connect db here
+const connectDB = async (uri) => {
   try {
-    console.log("Connecting DB");
-  } catch (error) {}
+    const conn = await mongoose.connect(uri);
+    console.log(`Database connect at ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = connectDB;
