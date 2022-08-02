@@ -1,0 +1,15 @@
+{
+  "name": "node_part_time_auth",
+  "version": "1.0.0",
+  "description": "zuri part time node assignment",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "evans kwofie",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.18.1"
+  }
+}
