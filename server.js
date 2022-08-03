@@ -1,6 +1,8 @@
 const express = require("express");
 const connectDB = require("./db/index");
 const errorHandler = require("./middleware/error");
+const verifyToken = require("./middleware/tokenChecker");
+const userRoutes = require("./routes/userRoutes");
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
@@ -16,6 +18,13 @@ const uri = process.env.MONGO_URI;
 
 // execute db connector function
 connectDB(uri);
+
+// use api routes
+app.use("/", userRoutes);
+
+app.get("/", verifyToken, (req, res) => {
+  res.send("Hello from the backed");
+});
 
 // use error middleware
 app.use(errorHandler);

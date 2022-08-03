@@ -3,11 +3,7 @@ const mongoose = require("mongoose");
 // create user schema
 const UserSchema = mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    username: {
       type: String,
       required: true,
     },
@@ -20,8 +16,8 @@ const UserSchema = mongoose.Schema(
       type: String,
     },
     userRole: {
-      typetype: String,
-      enum: ["admin", "student", "tutor", "not assigned"],
+      type: String,
+      enum: ["admin", "manager", "staff", "user", "not assigned"],
       default: "not assigned",
     },
     isTutor: {
@@ -29,6 +25,10 @@ const UserSchema = mongoose.Schema(
       default: 0,
     },
     isAdmin: {
+      type: Boolean,
+      default: 0,
+    },
+    isManager: {
       type: Boolean,
       default: 0,
     },
