@@ -1,5 +1,3 @@
-const expressAsyncHandler = require("express-async-handler");
-
 const roleChecker = (role) => {
   return (req, res, next) => {
     console.log(req.user);
