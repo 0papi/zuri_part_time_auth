@@ -118,49 +118,41 @@ exports.resetPassword = asyncHandler(async (req, res) => {
   }
 });
 
+// complete password reset
+
 exports.completeResetPassword = asyncHandler(async (req, res) => {
   try {
     // get password from request body
     const { password, password2 } = req.body;
-    console.log(req.body);
-    console.log(req.params);
-    const { id } = req.params;
+
     // check if passwords dont match
     if (password !== password2) {
       res.status(400);
       throw new Error("Sorry passwords should match");
     }
 
+    const { id } = req.params;
+    console.log(id);
+
     // find user by their id
     const user = await User.findOne({ _id: id });
-
+    console.log(user);
     // check if passwords do not match
     const isMatchedPasswords = await bcrypt.compare(user.password, password);
-
     if (isMatchedPasswords) {
       res.status(400);
       throw new Error("Sorry, you cannot reset with old password");
     }
-
     // generate salt
     const salt = await bcrypt.genSalt(10);
     // create hashedpwd
     const hashedPwd = await bcrypt.hash(password, salt);
-
     // update user password with new password
     user.password = hashedPwd;
-
     await user.save();
-
     res
       .status(200)
       .json({ success: "Your new password has been set successfully" });
-
-    mailer(
-      user.email,
-      "Password Reset Successful",
-      "Congratulations, you have reset your password"
-    );
   } catch (error) {
     res.status(500);
     throw new Error("Sorry, failed to reset user password");
