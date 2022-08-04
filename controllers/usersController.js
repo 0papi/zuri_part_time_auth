@@ -76,13 +76,9 @@ exports.loginUser = asyncHandler(async (req, res) => {
   }
 
   // generate token
-  const token = jwt.sign(
-    { username: user.username },
-    process.env.TOKEN_SECRET,
-    {
-      expiresIn: "1d",
-    }
-  );
+  const token = jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, {
+    expiresIn: "1d",
+  });
 
   res.status(200).json({
     _id: user._id,
@@ -108,8 +104,8 @@ exports.resetPassword = asyncHandler(async (req, res) => {
     throw new Error("User email does not exists, please register first");
   }
 
-  // send mail containing link for forgot password
-  const generatedLink = `${process.env.BASE_URL}api/auth/resetPassword/user/${user._id}`;
+  // send mail containing link for new password
+  const generatedLink = `${process.env.BASE_URL}api/auth/resetpassword/user/${user._id}`;
 
   try {
     mailer(user.email, "Password Reset Link", generatedLink);
@@ -126,26 +122,27 @@ exports.completeResetPassword = asyncHandler(async (req, res) => {
   try {
     // get password from request body
     const { password, password2 } = req.body;
+    console.log(req.body);
     console.log(req.params);
     const { id } = req.params;
-    // check if they dont match
+    // check if passwords dont match
     if (password !== password2) {
       res.status(400);
       throw new Error("Sorry passwords should match");
     }
 
     // find user by their id
-    const user = await User.findById(id);
+    const user = await User.findOne({ _id: id });
 
     // check if passwords do not match
-    const isMatchedPasswords = bcrypt.compare(user.password, password);
+    const isMatchedPasswords = await bcrypt.compare(user.password, password);
 
     if (isMatchedPasswords) {
       res.status(400);
       throw new Error("Sorry, you cannot reset with old password");
     }
 
-    // hash generate genSalt
+    // generate salt
     const salt = await bcrypt.genSalt(10);
     // create hashedpwd
     const hashedPwd = await bcrypt.hash(password, salt);
@@ -158,8 +155,14 @@ exports.completeResetPassword = asyncHandler(async (req, res) => {
     res
       .status(200)
       .json({ success: "Your new password has been set successfully" });
+
+    mailer(
+      user.email,
+      "Password Reset Successful",
+      "Congratulations, you have reset your password"
+    );
   } catch (error) {
-    res.status(400);
+    res.status(500);
     throw new Error("Sorry, failed to reset user password");
   }
 });

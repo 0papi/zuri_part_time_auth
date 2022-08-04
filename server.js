@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./db/index");
 const errorHandler = require("./middleware/error");
+const roleChecker = require("./middleware/roleChecker");
 const verifyToken = require("./middleware/tokenChecker");
 const userRoutes = require("./routes/userRoutes");
 if (process.env.NODE_ENV !== "production") {
@@ -22,7 +23,15 @@ connectDB(uri);
 // use api routes
 app.use("/", userRoutes);
 
-app.get("/", verifyToken, (req, res) => {
+app.get("/user", verifyToken, roleChecker("user"), (req, res) => {
+  res.send("Hello world, I am a user");
+});
+
+app.get("/admin", verifyToken, roleChecker("admin"), (req, res) => {
+  res.send("Hello world, I am an admin");
+});
+
+app.get("/", (req, res) => {
   res.send("Hello from the backed");
 });
 
