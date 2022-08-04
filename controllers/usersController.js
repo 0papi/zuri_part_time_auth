@@ -127,7 +127,7 @@ exports.completeResetPassword = asyncHandler(async (req, res) => {
     // get password from request body
     const { password, password2 } = req.body;
     console.log(req.params);
-    const { _id } = req.params;
+    const { id } = req.params;
     // check if they dont match
     if (password !== password2) {
       res.status(400);
