@@ -11,10 +11,17 @@ This app provides RESTFUL api endpoints that can be used to authenticate and aut
 # what you will see
 
 When you register a user, it returns the user's information
+
 ![screenshot](register_route.png)
 
 When you log in a user, it returns the auth token and additional user information
+
 ![screenshot](login_route.png)
 
 When a user loses their password, they can reset by first entering their email address. This will send a generated link to the user's email.
+
 ![screenshot](password_reset_link_in_email.png)
+
+When user enters new password in the reset link provided in their email, their password is reset successfully
+
+![screenshot](password_reset_confirmation.png)
