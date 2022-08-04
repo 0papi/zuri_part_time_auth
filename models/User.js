@@ -15,25 +15,12 @@ const UserSchema = mongoose.Schema(
     password: {
       type: String,
     },
-    userRole: {
+    role: {
       type: String,
       enum: ["admin", "manager", "staff", "user", "not assigned"],
       default: "not assigned",
     },
-    isTutor: {
-      type: Boolean,
-      default: 0,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: 0,
-    },
-    isManager: {
-      type: Boolean,
-      default: 0,
-    },
-  },
-  {
+  }, {
     timestamps: true,
   }
 );
