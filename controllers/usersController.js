@@ -135,7 +135,7 @@ exports.completeResetPassword = asyncHandler(async (req, res) => {
     }
 
     // find user by their id
-    const user = await User.findById(_id);
+    const user = await User.findById(id);
 
     // check if passwords do not match
     const isMatchedPasswords = bcrypt.compare(user.password, password);
